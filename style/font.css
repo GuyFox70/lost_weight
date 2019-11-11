@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'NotoSans-Regular';
+    src: url('../fonts/NotoSans-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lobster-Regular';
+    src: url('../fonts/Lobster-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}

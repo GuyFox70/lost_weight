@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style/normilize.css">
+    <link rel="stylesheet" href="style/style.css">
+    <title>lose weight</title>
+</head>
+<body>
+    <div class="wrapper">
+        <heard>
+            <nav class="navigation">
+                <ul class="navigation-menu">
+                    <li><a href="#">Советы диетологов</a></li>
+                    <li><a href="#">Питание</a></li>
+                    <li><a href="#">Спортивное питание</a></li>
+                    <li><a href="#">Программа тренировок</a></li>
+                </ul>
+                <div class="navigation-buttonMenu">
+                    <svg width="50" height="14">
+                        <rect x="5" y="5" width="45" height="7" rx="5" fill="white"/>
+                    </svg>
+                    <svg width="50" height="14">
+                        <rect x="5" y="5" width="45" height="7" rx="5" fill="white"/>
+                    </svg>
+                    <svg width="50" height="14">
+                        <rect x="5" y="5" width="45" height="7" rx="5" fill="white"/>
+                    </svg>
+                </div>
+            </nav>
+        </heard>
+
+        <main class="content">
+            <div class="content-canvas">
+                <canvas class="canvas" width="1060" height="350"></canvas>
+
+                <div class="content-canvas-info">
+                    <p class="canvas-info--text">Дата:<span class="date"></span></p>
+                    <p class="canvas-info--text">Вес:<span class="weight"></span></p>
+                </div>
+
+                <form class="content-canvas-form">
+                    <input type="text" placeholder="Enter your weight" class="content-canvas-form--inputWeight">
+                    <input type="submit" value="Сохранить" class="content-canvas-form--inputSubmit">
+                    <input type="button" value="Отменить" class="content-canvas-form--inputCancel hidden">
+                </form>
+            </div>
+        </main>
+
+        <footer class="bottom">
+
+        </footer>
+    </div>
+
+    <script src="js/drawGraph.js"></script>
+    <script src="js/showValue.js"></script>
+</body>
+</html>
