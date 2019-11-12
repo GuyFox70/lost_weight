@@ -10,7 +10,7 @@
     let data = date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
 
     checkDay(data);
-    
+
     const arrMonths = {
                         0: 'January', 1: 'February', 2: 'Match', 3: 'April',
                         4: 'May', 5: 'June', 6: 'July', 7: 'August',
@@ -62,7 +62,6 @@
         getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY);
 
         saveInLocalStorage('today', data);
-        //saveInLocalStorage('text', [data, input.value + ' ' + kg]);
 
         showText(elements,  getArrayFromText(getDataFromLocalStorageJson('data'), getDataFromLocalStorageJson(arrMonths[date.getMonth()])));
 

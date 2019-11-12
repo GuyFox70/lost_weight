@@ -8,10 +8,10 @@
 
     canvas.addEventListener('click', function(e) {
 
-        // if (localStorage.getItem(arrMonth[date.getMonth()])) {
-        //     console.log(localStorage.getItem(arrMonth[date.getMonth()]));
-        //     console.log(localStorage.getItem('data'));
-        //     console.log((e.clientX + 37) + ':' + e.clientY);
-        // }
+        if (localStorage.getItem(arrMonth[date.getMonth()])) {
+            console.log(localStorage.getItem(arrMonth[date.getMonth()]));
+            console.log(localStorage.getItem('data'));
+            console.log(e.clientX + ':' + e.clientY);
+        }
     });
 })();
