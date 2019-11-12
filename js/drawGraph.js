@@ -9,13 +9,8 @@
     let date = new Date();
     let data = date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
 
-    if (getFromLocalStorage('today') == data) {
-        showElement(cancel, submit);
-    } else {
-        hiddenElement(cancel, submit);
-        showText(elements);
-    }
-
+    checkDay(data);
+    
     const arrMonths = {
                         0: 'January', 1: 'February', 2: 'Match', 3: 'April',
                         4: 'May', 5: 'June', 6: 'July', 7: 'August',
@@ -32,20 +27,22 @@
     let [startX, startY, endX1, endY1] = [30, 320, 30, 20];
     let [endX2, endY2] = [1000, 320];
 
+
+
     document.addEventListener('DOMContentLoaded', () => {
         if (getFromLocalStorage(arrMonths[date.getMonth()])) {
 
             getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY);
 
-            if (getDataFromLocalStorageJson('text')) {
-                showText(elements, getDataFromLocalStorageJson('text'));
-            }
+            showText(elements,  getArrayFromText(getDataFromLocalStorageJson('data'), getDataFromLocalStorageJson(arrMonths[date.getMonth()])));
 
         } else  {
             getAxisY(startX, startY, endX1, endY1);
             getAxesX(startX, startY, endX2, endY2);
         }
     });
+
+
 
     document.addEventListener('beforeunload', () => {
         saveInLocalStorage('today', data);
@@ -58,20 +55,24 @@
         }
     });
 
+
+
     form.addEventListener('submit', () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY);
 
         saveInLocalStorage('today', data);
-        saveInLocalStorage('text', [data, input.value + ' ' + kg]);
+        //saveInLocalStorage('text', [data, input.value + ' ' + kg]);
 
-        showText(elements, [data, input.value + ' ' + kg]);
+        showText(elements,  getArrayFromText(getDataFromLocalStorageJson('data'), getDataFromLocalStorageJson(arrMonths[date.getMonth()])));
 
         showElement(cancel, submit);
         
         input.value = '';
         event.preventDefault();
     });
+
+
 
     cancel.addEventListener('click', () => { 
         changeLocalStorage(arrMonths[date.getMonth()]);
@@ -80,7 +81,7 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY);
 
-        showText(elements);
+        showText(elements,  getArrayFromText(getDataFromLocalStorageJson('data'), getDataFromLocalStorageJson(arrMonths[date.getMonth()])));
 
         removeInLocalStorage('today');
         removeInLocalStorage('text');
@@ -211,12 +212,29 @@
     function showText(elements, arrValue) {
         if (arrValue != undefined) {
             for (let i = 0; i < elements.length; i++) {
-                elements[i].innerHTML = elements[i].innerHTML + ' ' + arrValue[i];
+                elements[i].innerHTML = arrValue[i];
             }
         } else {
             for (let i = 0; i < elements.length; i++) {
                 elements[i].innerHTML = '';
             }
+        }
+    }
+
+    function getLastElementArray(arr) {
+        return arr.slice(-1);
+    }
+   
+    function getArrayFromText(arr1, arr2) {
+        return [getLastElementArray(arr1), getLastElementArray(arr2) + ' ' + kg]
+    }
+
+    function checkDay(data) {
+        if (getFromLocalStorage('today') == data) {
+            showElement(cancel, submit);
+        } else {
+            hiddenElement(cancel, submit);
+            showText(elements);
         }
     }
     //localStorage.clear();
