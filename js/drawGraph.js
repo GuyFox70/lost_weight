@@ -27,13 +27,14 @@
     let [startX, startY, endX1, endY1] = [30, 320, 30, 20];
     let [endX2, endY2] = [1000, 320];
     let [xText, yText, stepDashLine] = [850, 50, 320];
+    let [keyData, keyToday, keyText] = ['data' + arrMonths[date.getMonth()], 'today', 'text'];
 
 
 
     document.addEventListener('DOMContentLoaded', () => {
         if (getFromLocalStorage(arrMonths[date.getMonth()])) {
 
-            getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY, getDataFromLocalStorageJson('data'));
+            getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY, getDataFromLocalStorageJson(keyData));
           
             getLineDash(stepDashLine, extractJson(arrMonths[date.getMonth()]));
 
@@ -48,12 +49,12 @@
 
 
     document.addEventListener('beforeunload', () => {
-        saveInLocalStorage('today', data);
+        saveInLocalStorage(keyToday, data);
     });
 
     input.addEventListener('blur', () => {
         if (input.value != '') {
-            addInLocalStorageData('data', data);
+            addInLocalStorageData(keyData, data);
             addInLocalStorageData(arrMonths[date.getMonth()], input.value);
         }
     });
@@ -63,13 +64,13 @@
     form.addEventListener('submit', () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY, getDataFromLocalStorageJson('data'));
+        getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY, getDataFromLocalStorageJson(keyData));
 
         getLineDash(stepDashLine, extractJson(arrMonths[date.getMonth()]));
 
         showMonthAndYear(arrMonths[date.getMonth()], date.getFullYear(), xText, yText);
 
-        saveInLocalStorage('today', data);
+        saveInLocalStorage(keyToday, data);
 
         showElement(cancel, submit);
         
@@ -81,18 +82,18 @@
 
     cancel.addEventListener('click', () => { 
         changeLocalStorage(arrMonths[date.getMonth()]);
-        changeLocalStorage('data');
+        changeLocalStorage(keyData);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX , longY, getDataFromLocalStorageJson('data'));
+        getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX , longY, getDataFromLocalStorageJson(keyData));
 
         getLineDash(stepDashLine, extractJson(arrMonths[date.getMonth()]));
 
         showMonthAndYear(arrMonths[date.getMonth()], date.getFullYear(), xText, yText);
 
-        removeInLocalStorage('today');
-        removeInLocalStorage('text');
+        removeInLocalStorage(keyToday);
+        removeInLocalStorage(keyText);
 
         hiddenElement(cancel, submit);
     });

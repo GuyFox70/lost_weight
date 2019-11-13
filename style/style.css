@@ -135,3 +135,10 @@
     font-family: 'NotoSans-Regular';
     font-size: 15px;
 }
+
+.shadow {
+    --color-shadow: rgba(112, 117, 48, 0.7);
+    -webkit-box-shadow: inset 2px 2px 1px 0px var(--color-shadow), inset -2px -2px 1px 0px var(--color-shadow);
+    -moz-box-shadow: inset 2px 2px 1px 0px var(--color-shadow), inset -2px -2px 1px 0px var(--color-shadow);
+    box-shadow: inset 2px 2px 1px 0px var(--color-shadow), inset -2px -2px 1px 0px var(--color-shadow);
+}
