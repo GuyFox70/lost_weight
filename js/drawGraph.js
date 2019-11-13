@@ -26,15 +26,18 @@
     let [longY, startPoint, stepX] = [320, 50, 20];
     let [startX, startY, endX1, endY1] = [30, 320, 30, 20];
     let [endX2, endY2] = [1000, 320];
+    let [xText, yText, stepDashLine] = [850, 50, 320];
 
 
 
     document.addEventListener('DOMContentLoaded', () => {
         if (getFromLocalStorage(arrMonths[date.getMonth()])) {
 
-            getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY);
+            getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY, getDataFromLocalStorageJson('data'));
+          
+            getLineDash(stepDashLine, extractJson(arrMonths[date.getMonth()]));
 
-            showText(elements,  getArrayFromText(getDataFromLocalStorageJson('data'), getDataFromLocalStorageJson(arrMonths[date.getMonth()])));
+            showMonthAndYear(arrMonths[date.getMonth()], date.getFullYear(), xText, yText);
 
         } else  {
             getAxisY(startX, startY, endX1, endY1);
@@ -59,11 +62,14 @@
 
     form.addEventListener('submit', () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY);
+
+        getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY, getDataFromLocalStorageJson('data'));
+
+        getLineDash(stepDashLine, extractJson(arrMonths[date.getMonth()]));
+
+        showMonthAndYear(arrMonths[date.getMonth()], date.getFullYear(), xText, yText);
 
         saveInLocalStorage('today', data);
-
-        showText(elements,  getArrayFromText(getDataFromLocalStorageJson('data'), getDataFromLocalStorageJson(arrMonths[date.getMonth()])));
 
         showElement(cancel, submit);
         
@@ -78,9 +84,12 @@
         changeLocalStorage('data');
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY);
 
-        showText(elements,  getArrayFromText(getDataFromLocalStorageJson('data'), getDataFromLocalStorageJson(arrMonths[date.getMonth()])));
+        getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX , longY, getDataFromLocalStorageJson('data'));
+
+        getLineDash(stepDashLine, extractJson(arrMonths[date.getMonth()]));
+
+        showMonthAndYear(arrMonths[date.getMonth()], date.getFullYear(), xText, yText);
 
         removeInLocalStorage('today');
         removeInLocalStorage('text');
@@ -96,54 +105,82 @@
 
     //Functions
 
-    function getGraph(arr, startPoint, stepX, longY) {
+    function getGraph(arrWeight, startPoint, stepX, longY, arrDate) {
         getAxisY(startX, startY, endX1, endY1);
         getAxesX(startX, startY, endX2, endY2);
+        getJoinLine(arrWeight, startPoint, stepX, longY);
 
-        for (let i = 0 , x = startPoint; i < arr.length; i++, x += stepX) {
-            let y = longY - arr[i];
+        for (let i = 0 , x = startPoint; i < arrWeight.length; i++, x += stepX) {
+            let y = longY - arrWeight[i];
 
             ctx.beginPath();
             ctx.arc(x, y, 2.5, 0, getRadians(360));
             ctx.fill();
-        }
 
-        getJoinLine(arr, startPoint, stepX, longY);
+            ctx.font = '11px Arial';
+            ctx.fillText(arrWeight[i], x - 7, y - 10);
+            ctx.fillText(String(arrDate[i]).slice(0, 2), x - 5, y + (+arrWeight[i] + 13));
+        }
     }
 
-    function getJoinLine(arr, startPoint, stepX, longY) {
+    function getJoinLine(arrWeight, startPoint, stepX, longY) {
 
-        for (let i = 0 , x = startPoint; i < arr.length; i++, x += stepX) {
+        for (let i = 0 , x = startPoint; i < arrWeight.length; i++, x += stepX) {
 
-            if (arr[i + 1]) {
-                let y1 = longY - arr[i];
-                let y2 = longY - arr[i + 1];
+            if (arrWeight[i + 1]) {
+                let y1 = longY - arrWeight[i];
+                let y2 = longY - arrWeight[i + 1];
 
                 ctx.beginPath();
                 ctx.moveTo(x, y1);
                 ctx.lineTo(x + stepX, y2);
                 ctx.stroke();
-
             }
         }
     }
 
-    function extractJson(key) {
-        return JSON.parse(localStorage.getItem(key));
-    }
-
     function getAxesX(startX, startY, endX2, endY2) {
         ctx.beginPath();
+        ctx.setLineDash([0]);
         ctx.moveTo(startX, startY);
-        ctx.lineTo(endX2, endY2)
+        ctx.lineTo(endX2, endY2);
         ctx.stroke();
+
+        ctx.font = '13px Arial';
+        ctx.fillText('дата', endX2 + 10, endY2 + 10);
     }
 
     function getAxisY(startX, startY, endX1, endY1) {
         ctx.beginPath();
+        ctx.setLineDash([0]);
         ctx.moveTo(startX, startY);
         ctx.lineTo(endX1, endY1);
         ctx.stroke();
+
+        ctx.font = '13px Arial';
+        ctx.fillText(kg, endX1 - 15, endY1);
+    }
+
+    function getLineDash(stepDashLine, arrWeight) {
+        for (let i = 0 , x = startPoint; i < arrWeight.length; i++, x += stepX) {
+            let y = longY - arrWeight[i];
+
+            ctx.beginPath();
+            ctx.setLineDash([5]);
+            ctx.moveTo(x, stepDashLine);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+    }
+   
+    function showMonthAndYear(month, year, xText, yText) {
+        ctx.beginPath();
+        ctx.font = '25px Arial';
+        ctx.fillText(month + ', ' + year, xText, yText);
+    }
+
+    function extractJson(key) {
+        return JSON.parse(localStorage.getItem(key));
     }
 
     function getRadians(degrees) {
@@ -218,14 +255,6 @@
                 elements[i].innerHTML = '';
             }
         }
-    }
-
-    function getLastElementArray(arr) {
-        return arr.slice(-1);
-    }
-   
-    function getArrayFromText(arr1, arr2) {
-        return [getLastElementArray(arr1), getLastElementArray(arr2) + ' ' + kg]
     }
 
     function checkDay(data) {
