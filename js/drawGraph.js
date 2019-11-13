@@ -11,13 +11,13 @@
 
     checkDay(data);
 
-    const arrMonths = {
+    const objMonths = {
                         0: 'January', 1: 'February', 2: 'Match', 3: 'April',
                         4: 'May', 5: 'June', 6: 'July', 7: 'August',
                         8: 'September', 9: 'October', 10: 'November', 11: 'December'
                     };
 
-    window.months = arrMonths;
+    window.months = objMonths;
 
     let canvas = document.querySelector('.canvas');
     let ctx = canvas.getContext('2d');
@@ -27,20 +27,23 @@
     let [startX, startY, endX1, endY1] = [30, 320, 30, 20];
     let [endX2, endY2] = [1000, 320];
     let [xText, yText, stepDashLine] = [850, 50, 320];
-    let [keyData, keyToday, keyText] = ['data' + arrMonths[date.getMonth()], 'today', 'text'];
+    let [keyData, keyToday, keyText, keyMonthYear] = [
+                                                        'data' + objMonths[date.getMonth()], 'today', 'text',
+                                                        objMonths[date.getMonth()] + ', ' + date.getFullYear()
+                                                    ];
 
 
 
     document.addEventListener('DOMContentLoaded', () => {
-        if (getFromLocalStorage(arrMonths[date.getMonth()])) {
+        if (getFromLocalStorage(keyMonthYear)) {
 
-            getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY, getDataFromLocalStorageJson(keyData));
+            getGraph(extractJson(keyMonthYear), startPoint, stepX ,longY, getDataFromLocalStorageJson(keyData));
           
-            getLineDash(stepDashLine, extractJson(arrMonths[date.getMonth()]));
+            getLineDash(stepDashLine, extractJson(keyMonthYear));
 
-            showMonthAndYear(arrMonths[date.getMonth()], date.getFullYear(), xText, yText);
+            showMonthAndYear(keyMonthYear, xText, yText);
 
-        } else  {
+        } else {
             getAxisY(startX, startY, endX1, endY1);
             getAxesX(startX, startY, endX2, endY2);
         }
@@ -55,7 +58,7 @@
     input.addEventListener('blur', () => {
         if (input.value != '') {
             addInLocalStorageData(keyData, data);
-            addInLocalStorageData(arrMonths[date.getMonth()], input.value);
+            addInLocalStorageData(keyMonthYear, input.value);
         }
     });
 
@@ -64,11 +67,11 @@
     form.addEventListener('submit', () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX ,longY, getDataFromLocalStorageJson(keyData));
+        getGraph(extractJson(keyMonthYear), startPoint, stepX ,longY, getDataFromLocalStorageJson(keyData));
 
-        getLineDash(stepDashLine, extractJson(arrMonths[date.getMonth()]));
+        getLineDash(stepDashLine, extractJson(keyMonthYear));
 
-        showMonthAndYear(arrMonths[date.getMonth()], date.getFullYear(), xText, yText);
+        showMonthAndYear(keyMonthYear,xText, yText);
 
         saveInLocalStorage(keyToday, data);
 
@@ -81,16 +84,16 @@
 
 
     cancel.addEventListener('click', () => { 
-        changeLocalStorage(arrMonths[date.getMonth()]);
+        changeLocalStorage(keyMonthYear);
         changeLocalStorage(keyData);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        getGraph(extractJson(arrMonths[date.getMonth()]), startPoint, stepX , longY, getDataFromLocalStorageJson(keyData));
+        getGraph(extractJson(keyMonthYear), startPoint, stepX , longY, getDataFromLocalStorageJson(keyData));
 
-        getLineDash(stepDashLine, extractJson(arrMonths[date.getMonth()]));
+        getLineDash(stepDashLine, extractJson(keyMonthYear));
 
-        showMonthAndYear(arrMonths[date.getMonth()], date.getFullYear(), xText, yText);
+        showMonthAndYear(keyMonthYear, xText, yText);
 
         removeInLocalStorage(keyToday);
         removeInLocalStorage(keyText);
@@ -148,7 +151,7 @@
         ctx.stroke();
 
         ctx.font = '13px Arial';
-        ctx.fillText('дата', endX2 + 10, endY2 + 10);
+        ctx.fillText('день', endX2 + 10, endY2 + 10);
     }
 
     function getAxisY(startX, startY, endX1, endY1) {
@@ -174,10 +177,10 @@
         }
     }
    
-    function showMonthAndYear(month, year, xText, yText) {
+    function showMonthAndYear(keyMonthYear, xText, yText) {
         ctx.beginPath();
         ctx.font = '25px Arial';
-        ctx.fillText(month + ', ' + year, xText, yText);
+        ctx.fillText(keyMonthYear, xText, yText);
     }
 
     function extractJson(key) {
