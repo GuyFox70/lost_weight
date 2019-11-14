@@ -141,7 +141,7 @@
 
 .drop-menu {
     width: 250px;
-    background: rgba(46, 44, 43, 0.7);
+    background: rgba(46, 44, 43, 0.9);
     position: absolute;
     z-index: 2;
 }
@@ -168,4 +168,24 @@
 
 .drop-menu-list > li > a:hover {
     color: lightcoral;
+}
+
+.drop-menu--defaultText {
+    color: white;
+    text-align: center;
+    font-family: 'NotoSans-Regular';
+}
+
+.drop-menu--line {
+    border: 1px solid white;
+}
+
+.drop-menu--clearHistory {
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    color: white;
+    font-family: sans-serif;
+    font-size: 18px;
+    margin: 0px 0px 8px 0px;
 }

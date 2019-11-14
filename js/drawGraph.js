@@ -27,12 +27,11 @@
     let [startX, startY, endX1, endY1] = [30, 320, 30, 20];
     let [endX2, endY2] = [1000, 320];
     let [xText, yText, stepDashLine] = [850, 50, 320];
-    let [keyData, keyToday, keyText, keyMonthYear] = [
-                                                        'data' + objMonths[date.getMonth()], 'today', 'text',
-                                                        objMonths[date.getMonth()] + ', ' + date.getFullYear()
+    let [keyData, keyToday, keyText, keyMonthYear, keyHistory] = [
+                                                        'data' + objMonths[date.getMonth()] + ', ' + date.getFullYear(), 'today',
+                                                        'text', objMonths[date.getMonth()] + ', ' + date.getFullYear(),
+                                                        'history'
                                                     ];
-
-
 
     document.addEventListener('DOMContentLoaded', () => {
         if (getFromLocalStorage(keyMonthYear)) {
@@ -57,8 +56,13 @@
 
     input.addEventListener('blur', () => {
         if (input.value != '') {
+
             addInLocalStorageData(keyData, data);
+
             addInLocalStorageData(keyMonthYear, input.value);
+
+            saveHistoryInLocalStorage(keyHistory, keyMonthYear);
+
         }
     });
 
@@ -267,6 +271,27 @@
         } else {
             hiddenElement(cancel, submit);
             showText(elements);
+        }
+    }
+
+    function saveHistoryInLocalStorage(key, currentMonthYear) {
+        if (localStorage.getItem(key)) {
+            let arrHistory = JSON.parse(localStorage.getItem(key));
+
+            for (let elem of arrHistory) {
+                if (elem != currentMonthYear) {
+                    arrHistory.push(currentMonthYear);
+    
+                    let json = JSON.stringify(arrHistory);
+                    localStorage.setItem(key, json);
+                }
+            }
+        } else {
+            let arrHistory = [];
+            arrHistory.push(currentMonthYear);
+
+            let json = JSON.stringify(arrHistory);
+            localStorage.setItem(key, json);
         }
     }
     //localStorage.clear();

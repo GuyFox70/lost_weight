@@ -3,10 +3,13 @@
    let buttonMenu = navigation.querySelector('.navigation-buttonMenu');
    let dropMenu = document.querySelector('.drop-menu');
    let menuList = dropMenu.querySelector('.drop-menu-list');
-
-   let date = new Date();
+   let defaultText = dropMenu.querySelector('.drop-menu--defaultText');
+   let clearHistory = dropMenu.querySelector('.drop-menu--clearHistory');
 
    let objMonths = months;
+
+   let date = new Date();
+   let current =  objMonths[date.getMonth()] + ', ' + date.getFullYear();
 
    buttonMenu.addEventListener('mousedown', function showDropMenu() {
       buttonMenu.classList.add('shadow');
@@ -18,16 +21,27 @@
 
       menuList.innerHTML = '';
 
-      for(let key in objMonths) {
-         if (localStorage.getItem(objMonths[key] + ', ' + date.getFullYear())) {
-            let li = document.createElement('li');
+      if (localStorage.getItem('history')) {
+         let arr = getDataFromLocalStorageJson('history');
 
-            let a = document.createElement('a');
-            a.innerHTML = objMonths[key] + ', ' + date.getFullYear();
-            a.href = '#';
+         for (let i = 0; i < arr.length; i++) {
 
-            li.appendChild(a);
-            menuList.appendChild(li);
+            if (arr[i] != current) {
+
+               let li = document.createElement('li');
+
+               let a = document.createElement('a');
+               a.innerHTML = arr[i];
+               a.href = '#';
+
+               li.appendChild(a);
+               menuList.appendChild(li);
+
+               defaultText.classList.add('hidden');
+
+            } else {
+               defaultText.classList.remove('hidden');
+            }
          }
       }
 
@@ -60,4 +74,16 @@
    buttonMenu.addEventListener('mouseup', () => {
       buttonMenu.classList.remove('shadow');
    });
+
+   clearHistory.addEventListener('click', () => {
+      let arr = getDataFromLocalStorageJson('history');
+      arr.length = 0;
+
+      let json = JSON.stringify(arr);
+      localStorage.setItem('history', json);
+   });
+
+   function getDataFromLocalStorageJson(key) {
+      return JSON.parse(localStorage.getItem(key));
+  }
 })();
