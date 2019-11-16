@@ -76,7 +76,7 @@
 }
 
 .content-canvas-form {
-    width: 425px;
+    width: 305px;
     display: flex;
 }
 
@@ -101,8 +101,7 @@
     box-shadow: inset 3px 3px 2px 0px rgba(0,0,0,0.19);
 }
 
-.content-canvas-form--inputSubmit,
-.content-canvas-form--inputCancel {
+.content-canvas-form--inputButton{
     font-family: 'Lobster-Regular';
     width: 120px;
     border-radius: 10px;
@@ -122,14 +121,6 @@
 
 .visible {
     display: block;
-}
-
-.content-canvas-info {
-    width: 200px;
-
-    position: absolute;
-    top: 25px;
-    right: 0;
 }
 
 .shadow {
@@ -153,7 +144,7 @@
 }
 
 .drop-menu-list > li {
-    height: 30px;
+    height: 25px;
 }
 
 .drop-menu-list > li > a {
@@ -163,7 +154,7 @@
     color: white;
     text-align: center;
     font-family: 'NotoSans-Regular';
-    line-height: 28px;
+    line-height: 32px;
 }
 
 .drop-menu-list > li > a:hover {

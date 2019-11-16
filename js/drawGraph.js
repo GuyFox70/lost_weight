@@ -2,14 +2,7 @@
     let content = document.querySelector('.content');
     let form = content.querySelector('.content-canvas-form');
     let input = form.querySelector('.content-canvas-form--inputWeight');
-    let submit = form.querySelector('.content-canvas-form--inputSubmit');
-    let cancel =  form.querySelector('.content-canvas-form--inputCancel');
-    let elements = content.querySelectorAll('.date, .weight');
-
-    let date = new Date();
-    let data = date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
-
-    checkDay(data);
+    let inputButton = form.querySelector('.content-canvas-form--inputButton');
 
     const objMonths = {
                         0: 'January', 1: 'February', 2: 'Match', 3: 'April',
@@ -18,6 +11,9 @@
                     };
 
     window.months = objMonths;
+
+    let date = new Date();
+    let data = date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
 
     let canvas = document.querySelector('.canvas');
     let ctx = canvas.getContext('2d');
@@ -34,24 +30,25 @@
                                                     ];
 
     document.addEventListener('DOMContentLoaded', () => {
+
+        checkDay(data, inputButton);
+        saveHistoryInLocalStorage(keyHistory, keyMonthYear);
+
         if (getFromLocalStorage(keyMonthYear)) {
 
             getGraph(extractJson(keyMonthYear), startPoint, stepX ,longY, getDataFromLocalStorageJson(keyData));
-          
+
             getLineDash(stepDashLine, extractJson(keyMonthYear));
 
             showMonthAndYear(keyMonthYear, xText, yText);
 
         } else {
+
             getAxisY(startX, startY, endX1, endY1);
+
             getAxesX(startX, startY, endX2, endY2);
+
         }
-    });
-
-
-
-    document.addEventListener('beforeunload', () => {
-        saveInLocalStorage(keyToday, data);
     });
 
     input.addEventListener('blur', () => {
@@ -61,14 +58,23 @@
 
             addInLocalStorageData(keyMonthYear, input.value);
 
-            saveHistoryInLocalStorage(keyHistory, keyMonthYear);
-
         }
     });
 
+    inputButton.addEventListener('click', enterValue);
 
 
-    form.addEventListener('submit', () => {
+
+
+
+
+
+
+    
+
+    //Functions
+
+    function enterValue() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         getGraph(extractJson(keyMonthYear), startPoint, stepX ,longY, getDataFromLocalStorageJson(keyData));
@@ -77,21 +83,20 @@
 
         showMonthAndYear(keyMonthYear,xText, yText);
 
-        saveInLocalStorage(keyToday, data);
+        localStorage.setItem(keyToday, data);
 
-        showElement(cancel, submit);
+        inputButton.addEventListener('click', cancelEnter);
+
         
         input.value = '';
-        event.preventDefault();
-    });
+        inputButton.value = 'Отменить';
+        inputButton.removeEventListener('click', enterValue);
+    }
 
+    function cancelEnter() {
 
-
-    cancel.addEventListener('click', () => { 
         changeLocalStorage(keyMonthYear);
         changeLocalStorage(keyData);
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         getGraph(extractJson(keyMonthYear), startPoint, stepX , longY, getDataFromLocalStorageJson(keyData));
 
@@ -102,18 +107,14 @@
         removeInLocalStorage(keyToday);
         removeInLocalStorage(keyText);
 
-        hiddenElement(cancel, submit);
-    });
+        inputButton.addEventListener('click', enterValue);
+        inputButton.removeEventListener('click', cancelEnter);
 
-
-
-
-
-    
-
-    //Functions
+        inputButton.value = 'Сохранить';
+    }
 
     function getGraph(arrWeight, startPoint, stepX, longY, arrDate) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         getAxisY(startX, startY, endX1, endY1);
         getAxesX(startX, startY, endX2, endY2);
         getJoinLine(arrWeight, startPoint, stepX, longY);
@@ -198,12 +199,15 @@
     function addInLocalStorageData(key, value) {
 
         if (localStorage.getItem(key)) {
+
             let arr = JSON.parse(localStorage.getItem(key));
             arr.push(value);
 
             let json = JSON.stringify(arr);
             localStorage.setItem(key, json);
+
         } else {
+
             let arr = [];
             arr.push(value);
 
@@ -220,15 +224,6 @@
         localStorage.setItem(key, json);
     }
 
-    function saveInLocalStorage(key, value) {
-        if (typeof(value) == 'string') {
-            localStorage.setItem(key, value);
-        } else {
-            let json = JSON.stringify(value);
-            localStorage.setItem(key, json);
-        }
-    }
-
     function removeInLocalStorage(key) {
         return localStorage.removeItem(key);
     }
@@ -241,41 +236,35 @@
         return JSON.parse(localStorage.getItem(key));
     }
 
-    function showElement(elemCancel, elemSubmit) {
-        elemCancel.classList.remove('hidden');
-        elemCancel.classList.add('visible');
-        elemSubmit.disabled = true;
-    }
+    function checkDay(data, elem) {
+       
+        if (getFromLocalStorage('today') == null) {
+            elem.value = 'Сохранить';
+            return;
+        };
 
-    function hiddenElement(elemCancel, elemSubmit) {
-        elemCancel.classList.add('hidden');
-        elemCancel.classList.remove('visible');
-        elemSubmit.disabled = false;
-    }
-
-    function showText(elements, arrValue) {
-        if (arrValue != undefined) {
-            for (let i = 0; i < elements.length; i++) {
-                elements[i].innerHTML = arrValue[i];
-            }
-        } else {
-            for (let i = 0; i < elements.length; i++) {
-                elements[i].innerHTML = '';
-            }
-        }
-    }
-
-    function checkDay(data) {
         if (getFromLocalStorage('today') == data) {
-            showElement(cancel, submit);
+
+            elem.value = 'Отменить';
+
+            elem.removeEventListener('click', enterValue);
+            elem.addEventListener('click', cancelEnter);
+
         } else {
-            hiddenElement(cancel, submit);
-            showText(elements);
+
+            elem.value = 'Сохранить';
+
+            elem.addEventListener('click', enterValue);
+            elem.removeEventListener('click', cancelEnter);
+
+            localStorage.setItem(keyToday, data);
+
         }
     }
 
     function saveHistoryInLocalStorage(key, currentMonthYear) {
         if (localStorage.getItem(key)) {
+
             let arrHistory = JSON.parse(localStorage.getItem(key));
 
             for (let elem of arrHistory) {
@@ -286,12 +275,16 @@
                     localStorage.setItem(key, json);
                 }
             }
+
         } else {
+
             let arrHistory = [];
+           
             arrHistory.push(currentMonthYear);
 
             let json = JSON.stringify(arrHistory);
             localStorage.setItem(key, json);
+            
         }
     }
     //localStorage.clear();
