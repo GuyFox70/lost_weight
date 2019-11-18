@@ -75,22 +75,26 @@
     //Functions
 
     function enterValue() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (input.value != '') {
 
-        getGraph(extractJson(keyMonthYear), startPoint, stepX ,longY, getDataFromLocalStorageJson(keyData));
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        getLineDash(stepDashLine, extractJson(keyMonthYear));
+            getGraph(extractJson(keyMonthYear), startPoint, stepX ,longY, getDataFromLocalStorageJson(keyData));
 
-        showMonthAndYear(keyMonthYear,xText, yText);
+            getLineDash(stepDashLine, extractJson(keyMonthYear));
 
-        localStorage.setItem(keyToday, data);
+            showMonthAndYear(keyMonthYear,xText, yText);
 
-        inputButton.addEventListener('click', cancelEnter);
+            localStorage.setItem(keyToday, data);
 
-        
-        input.value = '';
-        inputButton.value = 'Отменить';
-        inputButton.removeEventListener('click', enterValue);
+            inputButton.addEventListener('click', cancelEnter);
+
+            
+            input.value = '';
+            inputButton.value = 'Отменить';
+            inputButton.removeEventListener('click', enterValue);
+
+        }
     }
 
     function cancelEnter() {
@@ -237,13 +241,12 @@
     }
 
     function checkDay(data, elem) {
-       
         if (getFromLocalStorage('today') == null) {
             elem.value = 'Сохранить';
             return;
         };
-
-        if (getFromLocalStorage('today') == data) {
+        
+        if (getFromLocalStorage('today') == data && getDataFromLocalStorageJson(keyMonthYear) != null) {
 
             elem.value = 'Отменить';
 

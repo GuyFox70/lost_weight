@@ -1,8 +1,8 @@
 @import "font.css" screen;
 
-.wrapper {
+/* .wrapper {
     position: relative;
-}
+} */
 
 .navigation {
     background: rgb(160, 164, 100);
@@ -10,6 +10,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    position: relative;
 }
 
 .navigation-menu {
@@ -46,6 +47,64 @@
     flex-direction: column;
     justify-content: space-around;
     outline: 1px solid white;
+    cursor: pointer;
+}
+
+.drop-menu {
+    width: 250px;
+    background: rgba(46, 44, 43, 0.9);
+    position: absolute;
+    z-index: 2;
+}
+
+.drop-menu-list {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+}
+
+.drop-menu-list > li {
+    height: 32px;
+}
+
+.drop-menu-list > li > a {
+    display: block;
+    height: 100%;
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    font-family: 'NotoSans-Regular';
+    line-height: 32px;
+}
+
+.drop-menu-list > li > a:hover {
+    color: lightcoral;
+}
+
+.drop-menu--defaultText {
+    color: white;
+    text-align: center;
+    font-family: 'NotoSans-Regular';
+}
+
+.buttons {
+    border-top: 1px solid white;
+}
+
+.drop-menu--current,
+.drop-menu--clearHistory {
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    color: white;
+    font-family: sans-serif;
+    font-size: 18px;
+    margin: 8px 0px 8px 0px;
+}
+
+.drop-menu--current:hover,
+.drop-menu--clearHistory:hover {
+    color: lightcoral;
     cursor: pointer;
 }
 
@@ -113,6 +172,18 @@
 .bottom {
     background: green;
     height: 9.7vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bottom--text {
+    margin: 0;
+    color: white;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 22px;
+    word-spacing: 20px;
 }
 
 .hidden {
@@ -128,55 +199,4 @@
     -webkit-box-shadow: inset 2px 2px 1px 0px var(--color-shadow), inset -2px -2px 1px 0px var(--color-shadow);
     -moz-box-shadow: inset 2px 2px 1px 0px var(--color-shadow), inset -2px -2px 1px 0px var(--color-shadow);
     box-shadow: inset 2px 2px 1px 0px var(--color-shadow), inset -2px -2px 1px 0px var(--color-shadow);
-}
-
-.drop-menu {
-    width: 250px;
-    background: rgba(46, 44, 43, 0.9);
-    position: absolute;
-    z-index: 2;
-}
-
-.drop-menu-list {
-   width: 100%;
-   display: flex;
-   flex-direction: column;
-}
-
-.drop-menu-list > li {
-    height: 25px;
-}
-
-.drop-menu-list > li > a {
-    display: block;
-    height: 100%;
-    text-decoration: none;
-    color: white;
-    text-align: center;
-    font-family: 'NotoSans-Regular';
-    line-height: 32px;
-}
-
-.drop-menu-list > li > a:hover {
-    color: lightcoral;
-}
-
-.drop-menu--defaultText {
-    color: white;
-    text-align: center;
-    font-family: 'NotoSans-Regular';
-}
-
-.drop-menu--line {
-    border: 1px solid white;
-}
-
-.drop-menu--clearHistory {
-    display: block;
-    text-decoration: none;
-    text-align: center;
-    color: white;
-    font-family: sans-serif;
-    font-size: 18px;
-    margin: 0px 0px 8px 0px;
 }

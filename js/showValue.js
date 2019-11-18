@@ -4,8 +4,11 @@
    let dropMenu = document.querySelector('.drop-menu');
    let menuList = dropMenu.querySelector('.drop-menu-list');
    let defaultText = dropMenu.querySelector('.drop-menu--defaultText');
-   let clearHistory = dropMenu.querySelector('.drop-menu--clearHistory');
    let form = document.querySelector('.content-canvas-form');
+
+   let buttons = document.querySelector('.buttons');
+   let buttonCurrent = buttons.querySelector('.drop-menu--current');
+   let clearHistory = buttons.querySelector('.drop-menu--clearHistory');
 
    let canvas = document.querySelector('.canvas');
    let ctx = canvas.getContext('2d');
@@ -31,8 +34,6 @@
 
          link.addEventListener('click', function() {
 
-            console.log(this.innerHTML);
-
             getGraph(extractJson(this.innerHTML), startPoint, stepX ,longY, getDataFromLocalStorageJson('data' + this.innerHTML));
 
             getLineDash(stepDashLine, extractJson(this.innerHTML));
@@ -43,27 +44,25 @@
             
          });
       }
+      buttons.classList.remove('hidden');
    }
 
    buttonMenu.addEventListener('mousedown', function showDropMenu() {
       buttonMenu.classList.add('shadow');
 
       let obj = buttonMenu.getBoundingClientRect();
+      let objNav = navigation.getBoundingClientRect();
 
-      dropMenu.style.top = obj.bottom + 10 + 'px';
+      dropMenu.style.top = objNav.bottom + 'px';
       dropMenu.style.left = obj.left - 100 + 'px';
 
+      menuList.innerHTML == '' ? defaultText.classList.remove('hidden') : defaultText.classList.add('hidden');
+
       setTimeout(() => {
-         if (dropMenu.classList.contains('hidden')) {
-            dropMenu.classList.remove('hidden');
-         } else {
-            dropMenu.classList.add('hidden');
-         }
+
+         dropMenu.classList.contains('hidden') ?  dropMenu.classList.remove('hidden') :  dropMenu.classList.add('hidden');
         
       }, 200);
-
-
-
 
       dropMenu.addEventListener('click', function hiddenMenuAfterClick() {
          setTimeout(() => {
@@ -75,19 +74,44 @@
       });
    });
 
-
-
    buttonMenu.addEventListener('mouseup', () => {
       buttonMenu.classList.remove('shadow');
    });
 
    clearHistory.addEventListener('click', () => {
-      let arr = getDataFromLocalStorageJson('history');
-      arr.length = 0;
+      localStorage.removeItem('history');
 
-      let json = JSON.stringify(arr);
-      localStorage.setItem('history', json);
+      menuList.innerHTML = '';
+
+      getGraph(extractJson(current), startPoint, stepX ,longY, getDataFromLocalStorageJson('data' + current));
+
+      getLineDash(stepDashLine, extractJson(current));
+
+      showMonthAndYear(current, xText, yText);
+
+      form.classList.remove('hidden');
+      defaultText.classList.remove('hidden');
+      buttons.classList.add('hidden');
    });
+
+   buttonCurrent.addEventListener('click', () => {
+
+      getGraph(extractJson(current), startPoint, stepX ,longY, getDataFromLocalStorageJson('data' + current));
+
+      getLineDash(stepDashLine, extractJson(current));
+
+      showMonthAndYear(current, xText, yText);
+
+      form.classList.remove('hidden');
+
+   });
+
+
+
+
+
+
+
 
    function getDataFromLocalStorageJson(key) {
       return JSON.parse(localStorage.getItem(key));
@@ -95,6 +119,8 @@
 
    function createList(arr) {
       let elements = [];
+
+      if (arr == null) return;
 
       for (let i = 0; i < arr.length; i++) {
 
@@ -121,10 +147,6 @@
       }
 
    }
-
-
-
-
 
    function getGraph(arrWeight, startPoint, stepX, longY, arrDate) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -207,10 +229,6 @@
 
    function getRadians(degrees) {
       return (Math.PI/180)*degrees;
-  }
-
-   function getFromLocalStorage(key) {
-      return localStorage.getItem(key);
   }
 
    function getDataFromLocalStorageJson(key) {
