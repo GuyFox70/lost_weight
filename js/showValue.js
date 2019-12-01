@@ -16,7 +16,7 @@
    let objMonths = months;
 
    let kg = 'кг';
-   let [longY, startPoint, stepX] = [320, 50, 20];
+   let [longY, startPoint, stepX] = [320, 50, 25];
    let [startX, startY, endX1, endY1] = [30, 320, 30, 20];
    let [endX2, endY2] = [1000, 320];
    let [xText, yText, stepDashLine] = [850, 50, 320];
@@ -112,7 +112,6 @@
 
 
 
-
    function getDataFromLocalStorageJson(key) {
       return JSON.parse(localStorage.getItem(key));
   }
@@ -154,6 +153,8 @@
       getAxesX(startX, startY, endX2, endY2);
       getJoinLine(arrWeight, startPoint, stepX, longY);
 
+      if (arrWeight == null) return;
+
       for (let i = 0 , x = startPoint; i < arrWeight.length; i++, x += stepX) {
           let y = longY - arrWeight[i];
 
@@ -163,11 +164,12 @@
 
           ctx.font = '11px Arial';
           ctx.fillText(arrWeight[i], x - 7, y - 10);
-          ctx.fillText(String(arrDate[i]).slice(0, 2), x - 5, y + (+arrWeight[i] + 13));
+          ctx.fillText(getDate(arrDate[i]), x - 5, y + (+arrWeight[i] + 13));
       }
   }
 
    function getJoinLine(arrWeight, startPoint, stepX, longY) {
+    if (arrWeight == null) return;
 
       for (let i = 0 , x = startPoint; i < arrWeight.length; i++, x += stepX) {
 
@@ -206,6 +208,8 @@
   }
 
    function getLineDash(stepDashLine, arrWeight) {
+    if (arrWeight == null) return;
+
       for (let i = 0 , x = startPoint; i < arrWeight.length; i++, x += stepX) {
           let y = longY - arrWeight[i];
 
@@ -233,5 +237,15 @@
 
    function getDataFromLocalStorageJson(key) {
       return JSON.parse(localStorage.getItem(key));
+  }
+
+  function getDate(date) {
+    let arr = date.split('.');
+
+    if (arr[0].length == 1) {
+      return String(arr[0]).slice(0, 1);
+    } else {
+      return String(arr[0]).slice(0, 2);
+    }
   }
 })();

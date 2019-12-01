@@ -19,7 +19,7 @@
     let ctx = canvas.getContext('2d');
 
     let kg = 'кг';
-    let [longY, startPoint, stepX] = [320, 50, 20];
+    let [longY, startPoint, stepX] = [320, 50, 25];
     let [startX, startY, endX1, endY1] = [30, 320, 30, 20];
     let [endX2, endY2] = [1000, 320];
     let [xText, yText, stepDashLine] = [850, 50, 320];
@@ -132,7 +132,7 @@
 
             ctx.font = '11px Arial';
             ctx.fillText(arrWeight[i], x - 7, y - 10);
-            ctx.fillText(String(arrDate[i]).slice(0, 2), x - 5, y + (+arrWeight[i] + 13));
+            ctx.fillText(getDate(arrDate[i]), x - 5, y + (+arrWeight[i] + 13));
         }
     }
 
@@ -290,5 +290,15 @@
             
         }
     }
+
+    function getDate(date) {
+	    let arr = date.split('.');
+
+	    if (arr[0].length == 1) {
+	      return String(arr[0]).slice(0, 1);
+	    } else {
+	      return String(arr[0]).slice(0, 2);
+	    }
+	  }
     //localStorage.clear();
 })();
